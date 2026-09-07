@@ -17,6 +17,8 @@ A entrega atual implementa somente a fundação da [`SPEC-001 — Autenticação
 
 WhatsApp, contatos, CRM, agenda, pós-venda e os demais módulos ainda não fazem parte desta entrega. Cada módulo terá sua própria spec.
 
+Consulte o documento consolidado [`docs/STATUS-E-ROADMAP.md`](docs/STATUS-E-ROADMAP.md) para ver tudo o que já foi criado, as limitações atuais, as pendências e o roadmap completo das SPEC-001 a SPEC-012.
+
 ## Stack
 
 - .NET 10, ASP.NET Core, EF Core e Npgsql;
