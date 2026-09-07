@@ -1,0 +1,50 @@
+name: whatscrm
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: whatscrm
+      POSTGRES_USER: whatscrm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U whatscrm -d whatscrm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/WhatsCrm.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__Postgres: Host=db;Port=5432;Database=whatscrm;Username=whatscrm;Password=${POSTGRES_PASSWORD}
+      Jwt__Secret: ${JWT_SECRET:?Defina JWT_SECRET no arquivo .env}
+      Jwt__Issuer: WhatsCRM
+      Jwt__Audience: WhatsCRM.Web
+      Database__MigrateOnStartup: "true"
+      Swagger__Enabled: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

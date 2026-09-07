@@ -1,0 +1,36 @@
+@host = http://localhost:5080
+@token = cole-o-token-aqui
+
+GET {{host}}/health
+
+###
+
+GET {{host}}/api/auth/bootstrap-status
+
+###
+
+POST {{host}}/api/auth/bootstrap
+Content-Type: application/json
+
+{
+  "empresaNome": "Empresa Exemplo",
+  "nome": "Administrador",
+  "email": "admin@exemplo.com",
+  "senha": "TroqueEstaSenha123",
+  "tipoNegocio": "Vendas"
+}
+
+###
+
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@exemplo.com",
+  "senha": "TroqueEstaSenha123"
+}
+
+###
+
+GET {{host}}/api/auth/me
+Authorization: Bearer {{token}}
